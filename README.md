@@ -15,7 +15,7 @@ URL manipulation with query parameter management and normalization
 Add to your Gemfile:
 
 ```ruby
-gem 'philiprehberger-uri_kit'
+gem "philiprehberger-uri_kit"
 ```
 
 Or install directly:
@@ -89,8 +89,8 @@ url.to_s  # => "https://example.com/base/page.html"
 
 ```bash
 bundle install
-bundle exec rspec      # Run tests
-bundle exec rubocop    # Check code style
+bundle exec rspec
+bundle exec rubocop
 ```
 
 ## License
