@@ -27,7 +27,7 @@ gem install philiprehberger-uri_kit
 ## Usage
 
 ```ruby
-require 'philiprehberger/uri_kit'
+require "philiprehberger/uri_kit"
 
 url = Philiprehberger::UriKit.parse('https://example.com/path?a=1')
 url.add_param('b', '2')
