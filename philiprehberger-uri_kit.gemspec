@@ -11,14 +11,14 @@ Gem::Specification.new do |spec|
   spec.summary = 'URL manipulation with query parameter management and normalization'
   spec.description = 'Parse, build, and manipulate URLs with query parameter management, ' \
                      'normalization, domain extraction, and URL joining. Built on Ruby stdlib URI.'
-  spec.homepage      = 'https://philiprehberger.com/open-source-packages/ruby/philiprehberger-uri_kit'
+  spec.homepage = 'https://philiprehberger.com/open-source-packages/ruby/philiprehberger-uri_kit'
   spec.license = 'MIT'
   spec.required_ruby_version = '>= 3.1'
 
   spec.metadata['homepage_uri'] = spec.homepage
-  spec.metadata['source_code_uri']       = 'https://github.com/philiprehberger/rb-uri-kit'
-  spec.metadata['changelog_uri']         = 'https://github.com/philiprehberger/rb-uri-kit/blob/main/CHANGELOG.md'
-  spec.metadata['bug_tracker_uri']       = 'https://github.com/philiprehberger/rb-uri-kit/issues'
+  spec.metadata['source_code_uri'] = 'https://github.com/philiprehberger/rb-uri-kit'
+  spec.metadata['changelog_uri'] = 'https://github.com/philiprehberger/rb-uri-kit/blob/main/CHANGELOG.md'
+  spec.metadata['bug_tracker_uri'] = 'https://github.com/philiprehberger/rb-uri-kit/issues'
   spec.metadata['rubygems_mfa_required'] = 'true'
 
   spec.files = Dir['lib/**/*.rb', 'LICENSE', 'README.md', 'CHANGELOG.md']
