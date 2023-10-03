@@ -63,6 +63,39 @@ url = Philiprehberger::UriKit.build(
 url.to_s  # => "https://example.com/api/users?page=1&limit=10"
 ```
 
+### Path Manipulation
+
+```ruby
+url = Philiprehberger::UriKit.parse('https://example.com/api')
+
+appended = url.append_path('users')
+appended.to_s  # => "https://example.com/api/users"
+
+url.path_segments  # => ["api"]
+
+replaced = url.replace_path('/v2/items')
+replaced.to_s  # => "https://example.com/v2/items"
+```
+
+### Query Helpers
+
+```ruby
+url = Philiprehberger::UriKit.parse('https://example.com/search?q=ruby')
+
+with_params = url.add_params('page' => '1', 'limit' => '10')
+with_params.to_s  # => "https://example.com/search?q=ruby&page=1&limit=10"
+
+cleared = url.clear_params
+cleared.to_s  # => "https://example.com/search"
+```
+
+### Base URL
+
+```ruby
+url = Philiprehberger::UriKit.parse('https://example.com:8080/api/v2?key=val')
+url.base_url  # => "https://example.com:8080"
+```
+
 ### Joining URLs
 
 ```ruby
@@ -83,6 +116,12 @@ url.to_s  # => "https://example.com/base/page.html"
 | `Url#normalize` | Normalize the URL |
 | `Url#domain` | Get the registered domain |
 | `Url#subdomain` | Get the subdomain portion |
+| `Url#append_path(segment)` | Append a path segment, returns new Url |
+| `Url#path_segments` | Get path segments as an array |
+| `Url#replace_path(new_path)` | Replace the entire path, returns new Url |
+| `Url#add_params(hash)` | Add multiple query parameters, returns new Url |
+| `Url#clear_params` | Remove all query parameters, returns new Url |
+| `Url#base_url` | Get scheme + host + port as a string |
 | `Url#to_s` | Get the full URL string |
 
 ## Development

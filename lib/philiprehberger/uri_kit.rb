@@ -88,6 +88,60 @@ module Philiprehberger
         parts[0...-2].join('.')
       end
 
+      # Append a path segment, handling leading/trailing slashes correctly
+      #
+      # @param segment [String] the path segment to append
+      # @return [Url] a new Url with the appended path
+      def append_path(segment)
+        current = @uri.path.chomp('/')
+        clean_segment = segment.to_s.sub(%r{^/}, '')
+        new_path = "#{current}/#{clean_segment}"
+        build_with(path: new_path)
+      end
+
+      # Get path segments as an array
+      #
+      # @return [Array<String>] non-empty path segments
+      def path_segments
+        @uri.path.split('/').reject(&:empty?)
+      end
+
+      # Replace the entire path
+      #
+      # @param new_path [String] the new path
+      # @return [Url] a new Url with the replaced path
+      def replace_path(new_path)
+        normalized = new_path.to_s.start_with?('/') ? new_path.to_s : "/#{new_path}"
+        build_with(path: normalized)
+      end
+
+      # Add multiple query parameters at once
+      #
+      # @param hash [Hash] parameters to add
+      # @return [Url] a new Url with the added parameters
+      def add_params(hash)
+        merged = params.merge(hash.transform_keys(&:to_s).transform_values(&:to_s))
+        new_url = build_with(query: nil)
+        new_url.instance_variable_get(:@uri).query = encode_params(merged) unless merged.empty?
+        new_url
+      end
+
+      # Remove all query parameters
+      #
+      # @return [Url] a new Url with no query parameters
+      def clear_params
+        build_with(query: nil)
+      end
+
+      # Get the base URL (scheme + host + port only)
+      #
+      # @return [String] the base URL string
+      def base_url
+        base = "#{@uri.scheme}://#{@uri.host}"
+        base += ":#{@uri.port}" if @uri.port && !default_port?
+        base
+      end
+
       # @return [String] the full URL string
       def to_s
         @uri.to_s
@@ -111,6 +165,17 @@ module Philiprehberger
 
         sorted = params.sort_by { |k, _| k }
         @uri.query = encode_params(sorted.to_h)
+      end
+
+      def default_port?
+        default_ports = { 'http' => 80, 'https' => 443, 'ftp' => 21 }
+        @uri.port == default_ports[@uri.scheme]
+      end
+
+      def build_with(overrides)
+        uri_copy = @uri.dup
+        overrides.each { |key, value| uri_copy.send(:"#{key}=", value) }
+        self.class.new(uri_copy.to_s)
       end
     end
 
