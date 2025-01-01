@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.3.0] - 2026-04-09
+
+### Added
+- Component accessors: `scheme`, `host`, `port`, `path`, `query`, `fragment`
+- Value equality: `==`, `eql?`, `hash` based on string representation
+
 ## [0.2.0] - 2026-04-03
 
 ### Added
