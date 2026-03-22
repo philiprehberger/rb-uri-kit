@@ -1,0 +1,25 @@
+# frozen_string_literal: true
+
+require_relative 'lib/philiprehberger/uri_kit/version'
+
+Gem::Specification.new do |spec|
+  spec.name = 'philiprehberger-uri_kit'
+  spec.version = Philiprehberger::UriKit::VERSION
+  spec.authors = ['philiprehberger']
+  spec.email = ['philiprehberger@users.noreply.github.com']
+
+  spec.summary = 'URL manipulation with query parameter management and normalization'
+  spec.description = 'Parse, build, and manipulate URLs with query parameter management, ' \
+                     'normalization, domain extraction, and URL joining. Built on Ruby stdlib URI.'
+  spec.homepage = 'https://github.com/philiprehberger/rb-uri-kit'
+  spec.license = 'MIT'
+  spec.required_ruby_version = '>= 3.1'
+
+  spec.metadata['homepage_uri'] = spec.homepage
+  spec.metadata['source_code_uri'] = spec.homepage
+  spec.metadata['changelog_uri'] = "#{spec.homepage}/blob/main/CHANGELOG.md"
+  spec.metadata['rubygems_mfa_required'] = 'true'
+
+  spec.files = Dir['lib/**/*.rb', 'LICENSE', 'README.md', 'CHANGELOG.md']
+  spec.require_paths = ['lib']
+end
