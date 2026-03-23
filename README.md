@@ -4,7 +4,7 @@
 [![Gem Version](https://badge.fury.io/rb/philiprehberger-uri_kit.svg)](https://rubygems.org/gems/philiprehberger-uri_kit)
 [![License](https://img.shields.io/github/license/philiprehberger/rb-uri-kit)](LICENSE)
 
-URL manipulation with query parameter management and normalization. Built on Ruby's stdlib `uri`.
+URL manipulation with query parameter management and normalization
 
 ## Requirements
 
