@@ -60,7 +60,7 @@ module Philiprehberger
         remove_default_port
         sort_params
         @uri.path = '/' if @uri.path.empty? && @uri.host
-        @uri.fragment = nil if @uri.fragment&.empty?
+        @uri.fragment = nil if @uri.fragment && @uri.fragment.empty?
         self
       end
 
@@ -133,7 +133,9 @@ module Philiprehberger
       query = if params.empty?
                 nil
               else
-                params.map { |k, v| "#{::URI.encode_www_form_component(k)}=#{::URI.encode_www_form_component(v)}" }.join('&')
+                params.map do |k, v|
+                  "#{::URI.encode_www_form_component(k)}=#{::URI.encode_www_form_component(v)}"
+                end.join('&')
               end
 
       uri = ::URI::Generic.build(
