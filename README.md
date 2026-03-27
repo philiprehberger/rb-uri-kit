@@ -3,6 +3,7 @@
 [![Tests](https://github.com/philiprehberger/rb-uri-kit/actions/workflows/ci.yml/badge.svg)](https://github.com/philiprehberger/rb-uri-kit/actions/workflows/ci.yml)
 [![Gem Version](https://badge.fury.io/rb/philiprehberger-uri_kit.svg)](https://rubygems.org/gems/philiprehberger-uri_kit)
 [![License](https://img.shields.io/github/license/philiprehberger/rb-uri-kit)](LICENSE)
+[![Sponsor](https://img.shields.io/badge/sponsor-GitHub%20Sponsors-ec6cb9)](https://github.com/sponsors/philiprehberger)
 
 URL manipulation with query parameter management and normalization
 
