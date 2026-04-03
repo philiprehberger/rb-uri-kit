@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.0] - 2026-04-03
+
+### Added
+- Path manipulation: `append_path`, `path_segments`, `replace_path`
+- Query helpers: `add_params`, `clear_params`
+- `base_url` for extracting scheme + host + port
+
 ## [0.1.6] - 2026-03-31
 
 ### Added

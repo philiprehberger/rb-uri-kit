@@ -148,6 +148,187 @@ RSpec.describe Philiprehberger::UriKit do
       end
     end
 
+    describe '#append_path' do
+      it 'appends a segment to an existing path' do
+        url = described_class.new('https://example.com/api')
+        result = url.append_path('users')
+        expect(result.to_s).to eq('https://example.com/api/users')
+      end
+
+      it 'handles leading slash in segment' do
+        url = described_class.new('https://example.com/api')
+        result = url.append_path('/users')
+        expect(result.to_s).to eq('https://example.com/api/users')
+      end
+
+      it 'handles trailing slash in base path' do
+        url = described_class.new('https://example.com/api/')
+        result = url.append_path('users')
+        expect(result.to_s).to eq('https://example.com/api/users')
+      end
+
+      it 'handles both leading and trailing slashes' do
+        url = described_class.new('https://example.com/api/')
+        result = url.append_path('/users')
+        expect(result.to_s).to eq('https://example.com/api/users')
+      end
+
+      it 'returns a new Url (immutable)' do
+        url = described_class.new('https://example.com/api')
+        result = url.append_path('users')
+        expect(result).not_to be(url)
+        expect(url.to_s).to eq('https://example.com/api')
+      end
+
+      it 'appends to empty path' do
+        url = described_class.new('https://example.com')
+        result = url.append_path('users')
+        expect(result.to_s).to eq('https://example.com/users')
+      end
+
+      it 'appends to root path' do
+        url = described_class.new('https://example.com/')
+        result = url.append_path('users')
+        expect(result.to_s).to eq('https://example.com/users')
+      end
+    end
+
+    describe '#path_segments' do
+      it 'returns segments for a typical path' do
+        url = described_class.new('https://example.com/api/v2/users')
+        expect(url.path_segments).to eq(%w[api v2 users])
+      end
+
+      it 'returns empty array for empty path' do
+        url = described_class.new('https://example.com')
+        expect(url.path_segments).to eq([])
+      end
+
+      it 'returns empty array for root path' do
+        url = described_class.new('https://example.com/')
+        expect(url.path_segments).to eq([])
+      end
+
+      it 'ignores trailing slashes' do
+        url = described_class.new('https://example.com/api/users/')
+        expect(url.path_segments).to eq(%w[api users])
+      end
+
+      it 'handles encoded segments' do
+        url = described_class.new('https://example.com/path/hello%20world')
+        expect(url.path_segments).to eq(%w[path hello%20world])
+      end
+    end
+
+    describe '#replace_path' do
+      it 'replaces the entire path' do
+        url = described_class.new('https://example.com/old/path')
+        result = url.replace_path('/new/path')
+        expect(result.to_s).to eq('https://example.com/new/path')
+      end
+
+      it 'adds leading slash if missing' do
+        url = described_class.new('https://example.com/old')
+        result = url.replace_path('new')
+        expect(result.to_s).to eq('https://example.com/new')
+      end
+
+      it 'returns a new Url (immutable)' do
+        url = described_class.new('https://example.com/old')
+        result = url.replace_path('/new')
+        expect(result).not_to be(url)
+        expect(url.to_s).to eq('https://example.com/old')
+      end
+
+      it 'preserves query and fragment' do
+        url = described_class.new('https://example.com/old?a=1#frag')
+        result = url.replace_path('/new')
+        expect(result.to_s).to eq('https://example.com/new?a=1#frag')
+      end
+    end
+
+    describe '#add_params' do
+      it 'adds multiple parameters at once' do
+        url = described_class.new('https://example.com/path')
+        result = url.add_params('a' => '1', 'b' => '2')
+        expect(result.params).to eq('a' => '1', 'b' => '2')
+      end
+
+      it 'merges with existing parameters' do
+        url = described_class.new('https://example.com/path?x=0')
+        result = url.add_params('a' => '1')
+        expect(result.params).to eq('x' => '0', 'a' => '1')
+      end
+
+      it 'overwrites existing keys' do
+        url = described_class.new('https://example.com?a=1')
+        result = url.add_params('a' => '99')
+        expect(result.params).to eq('a' => '99')
+      end
+
+      it 'handles symbol keys' do
+        url = described_class.new('https://example.com')
+        result = url.add_params(page: 1, limit: 10)
+        expect(result.params).to eq('page' => '1', 'limit' => '10')
+      end
+
+      it 'returns a new Url (immutable)' do
+        url = described_class.new('https://example.com')
+        result = url.add_params('a' => '1')
+        expect(result).not_to be(url)
+        expect(url.params).to eq({})
+      end
+    end
+
+    describe '#clear_params' do
+      it 'removes all query parameters' do
+        url = described_class.new('https://example.com/path?a=1&b=2')
+        result = url.clear_params
+        expect(result.params).to eq({})
+        expect(result.to_s).to eq('https://example.com/path')
+      end
+
+      it 'returns a new Url (immutable)' do
+        url = described_class.new('https://example.com?a=1')
+        result = url.clear_params
+        expect(result).not_to be(url)
+        expect(url.params).to eq('a' => '1')
+      end
+
+      it 'handles URL with no params' do
+        url = described_class.new('https://example.com/path')
+        result = url.clear_params
+        expect(result.to_s).to eq('https://example.com/path')
+      end
+    end
+
+    describe '#base_url' do
+      it 'returns scheme and host' do
+        url = described_class.new('https://example.com/path?a=1#frag')
+        expect(url.base_url).to eq('https://example.com')
+      end
+
+      it 'includes non-default port' do
+        url = described_class.new('https://example.com:8080/path')
+        expect(url.base_url).to eq('https://example.com:8080')
+      end
+
+      it 'excludes default https port' do
+        url = described_class.new('https://example.com:443/path')
+        expect(url.base_url).to eq('https://example.com')
+      end
+
+      it 'excludes default http port' do
+        url = described_class.new('http://example.com:80/path')
+        expect(url.base_url).to eq('http://example.com')
+      end
+
+      it 'works with http scheme' do
+        url = described_class.new('http://example.com/path')
+        expect(url.base_url).to eq('http://example.com')
+      end
+    end
+
     describe '#to_s' do
       it 'returns the full URL' do
         url = described_class.new('https://example.com/path?q=1#frag')
