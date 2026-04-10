@@ -142,9 +142,54 @@ module Philiprehberger
         base
       end
 
+      # @return [String, nil] the URL scheme (e.g. "https")
+      def scheme
+        @uri.scheme
+      end
+
+      # @return [String, nil] the hostname
+      def host
+        @uri.host
+      end
+
+      # @return [Integer, nil] the port number
+      def port
+        @uri.port
+      end
+
+      # @return [String] the path component
+      def path
+        @uri.path
+      end
+
+      # @return [String, nil] the raw query string
+      def query
+        @uri.query
+      end
+
+      # @return [String, nil] the fragment
+      def fragment
+        @uri.fragment
+      end
+
       # @return [String] the full URL string
       def to_s
         @uri.to_s
+      end
+
+      # Value equality based on string representation
+      #
+      # @param other [Object] object to compare
+      # @return [Boolean]
+      def ==(other)
+        other.is_a?(self.class) && to_s == other.to_s
+      end
+
+      alias eql? ==
+
+      # @return [Integer] hash code consistent with eql?
+      def hash
+        to_s.hash
       end
 
       private

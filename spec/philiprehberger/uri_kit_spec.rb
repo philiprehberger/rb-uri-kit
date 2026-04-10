@@ -329,6 +329,72 @@ RSpec.describe Philiprehberger::UriKit do
       end
     end
 
+    describe 'component accessors' do
+      let(:url) { described_class.new('https://example.com:8080/api?key=val#section') }
+
+      it '#scheme returns the scheme' do
+        expect(url.scheme).to eq('https')
+      end
+
+      it '#host returns the host' do
+        expect(url.host).to eq('example.com')
+      end
+
+      it '#port returns the port' do
+        expect(url.port).to eq(8080)
+      end
+
+      it '#path returns the path' do
+        expect(url.path).to eq('/api')
+      end
+
+      it '#query returns the raw query string' do
+        expect(url.query).to eq('key=val')
+      end
+
+      it '#fragment returns the fragment' do
+        expect(url.fragment).to eq('section')
+      end
+
+      it 'returns nil for missing components' do
+        bare = described_class.new('https://example.com/path')
+        expect(bare.query).to be_nil
+        expect(bare.fragment).to be_nil
+      end
+    end
+
+    describe 'equality' do
+      it 'considers two Urls with the same string equal' do
+        a = described_class.new('https://example.com/path')
+        b = described_class.new('https://example.com/path')
+        expect(a).to eq(b)
+      end
+
+      it 'considers different URLs not equal' do
+        a = described_class.new('https://example.com/a')
+        b = described_class.new('https://example.com/b')
+        expect(a).not_to eq(b)
+      end
+
+      it 'is not equal to non-Url objects' do
+        url = described_class.new('https://example.com')
+        expect(url).not_to eq('https://example.com')
+      end
+
+      it 'supports eql? for hash key usage' do
+        a = described_class.new('https://example.com')
+        b = described_class.new('https://example.com')
+        expect(a).to eql(b)
+        expect(a.hash).to eq(b.hash)
+      end
+
+      it 'deduplicates in arrays via uniq' do
+        a = described_class.new('https://example.com')
+        b = described_class.new('https://example.com')
+        expect([a, b].uniq.size).to eq(1)
+      end
+    end
+
     describe '#to_s' do
       it 'returns the full URL' do
         url = described_class.new('https://example.com/path?q=1#frag')

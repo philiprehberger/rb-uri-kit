@@ -96,6 +96,29 @@ url = Philiprehberger::UriKit.parse('https://example.com:8080/api/v2?key=val')
 url.base_url  # => "https://example.com:8080"
 ```
 
+### Component Accessors
+
+```ruby
+url = Philiprehberger::UriKit.parse('https://example.com:8080/api?key=val#section')
+url.scheme    # => "https"
+url.host      # => "example.com"
+url.port      # => 8080
+url.path      # => "/api"
+url.query     # => "key=val"
+url.fragment  # => "section"
+```
+
+### Equality
+
+```ruby
+a = Philiprehberger::UriKit.parse('https://example.com/path')
+b = Philiprehberger::UriKit.parse('https://example.com/path')
+a == b  # => true
+
+# Works with Hash keys and arrays
+set = [a, b].uniq  # => 1 element
+```
+
 ### Joining URLs
 
 ```ruby
@@ -122,7 +145,14 @@ url.to_s  # => "https://example.com/base/page.html"
 | `Url#add_params(hash)` | Add multiple query parameters, returns new Url |
 | `Url#clear_params` | Remove all query parameters, returns new Url |
 | `Url#base_url` | Get scheme + host + port as a string |
+| `Url#scheme` | URL scheme (e.g. `"https"`) |
+| `Url#host` | Hostname |
+| `Url#port` | Port number |
+| `Url#path` | Path component |
+| `Url#query` | Raw query string |
+| `Url#fragment` | Fragment identifier |
 | `Url#to_s` | Get the full URL string |
+| `Url#==` / `Url#eql?` | Value equality based on string representation |
 
 ## Development
 
