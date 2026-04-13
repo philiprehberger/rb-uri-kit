@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.4.0] - 2026-04-20
+
+### Added
+- `Url#keep_params(*keys)` — return a new `Url` containing only the listed query parameters, dropping every other key. Accepts individual `String`/`Symbol` keys or a single array argument; calling with no keys drops the whole query.
+
 ## [0.3.1] - 2026-04-15
 
 ### Changed
