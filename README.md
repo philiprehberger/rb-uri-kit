@@ -87,6 +87,9 @@ with_params.to_s  # => "https://example.com/search?q=ruby&page=1&limit=10"
 
 cleared = url.clear_params
 cleared.to_s  # => "https://example.com/search"
+
+tracking = Philiprehberger::UriKit.parse('https://example.com/p?utm_source=x&id=42')
+tracking.keep_params('id').to_s  # => "https://example.com/p?id=42"
 ```
 
 ### Base URL
@@ -144,6 +147,7 @@ url.to_s  # => "https://example.com/base/page.html"
 | `Url#replace_path(new_path)` | Replace the entire path, returns new Url |
 | `Url#add_params(hash)` | Add multiple query parameters, returns new Url |
 | `Url#clear_params` | Remove all query parameters, returns new Url |
+| `Url#keep_params(*keys)` | Keep only the listed query params, drop the rest; returns new Url |
 | `Url#base_url` | Get scheme + host + port as a string |
 | `Url#scheme` | URL scheme (e.g. `"https"`) |
 | `Url#host` | Hostname |

@@ -133,6 +133,20 @@ module Philiprehberger
         build_with(query: nil)
       end
 
+      # Keep only the query parameters matching the given keys. Returns a new
+      # Url with every other parameter dropped. Accepts String or Symbol keys;
+      # comparison is performed against the decoded parameter names.
+      #
+      # @param keys [Array<String, Symbol>] parameter keys to retain
+      # @return [Url] a new Url containing at most the listed parameters
+      def keep_params(*keys)
+        allow = keys.flatten.map(&:to_s)
+        filtered = params.slice(*allow)
+        new_url = build_with(query: nil)
+        new_url.instance_variable_get(:@uri).query = encode_params(filtered) unless filtered.empty?
+        new_url
+      end
+
       # Get the base URL (scheme + host + port only)
       #
       # @return [String] the base URL string

@@ -302,6 +302,40 @@ RSpec.describe Philiprehberger::UriKit do
       end
     end
 
+    describe '#keep_params' do
+      it 'keeps only the listed keys' do
+        url = described_class.new('https://example.com/path?a=1&b=2&c=3')
+        expect(url.keep_params('a', 'c').params).to eq('a' => '1', 'c' => '3')
+      end
+
+      it 'accepts symbol keys' do
+        url = described_class.new('https://example.com/?utm_source=x&session=y')
+        expect(url.keep_params(:utm_source).params).to eq('utm_source' => 'x')
+      end
+
+      it 'returns a new Url (immutable)' do
+        url = described_class.new('https://example.com/path?a=1&b=2')
+        result = url.keep_params('a')
+        expect(result).not_to be(url)
+        expect(url.params).to eq('a' => '1', 'b' => '2')
+      end
+
+      it 'drops the query entirely when no keys match' do
+        url = described_class.new('https://example.com/path?a=1&b=2')
+        expect(url.keep_params('missing').to_s).to eq('https://example.com/path')
+      end
+
+      it 'drops the query entirely when called with no keys' do
+        url = described_class.new('https://example.com/path?a=1')
+        expect(url.keep_params.to_s).to eq('https://example.com/path')
+      end
+
+      it 'accepts an array of keys' do
+        url = described_class.new('https://example.com/?a=1&b=2&c=3')
+        expect(url.keep_params(%w[a b]).params).to eq('a' => '1', 'b' => '2')
+      end
+    end
+
     describe '#base_url' do
       it 'returns scheme and host' do
         url = described_class.new('https://example.com/path?a=1#frag')
