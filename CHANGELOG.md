@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.5.0] - 2026-04-25
+
+### Added
+- `Url#same_origin?(other)` for RFC 6454 same-origin checks (scheme, host, effective port)
+- `Url#same_host?(other)` for case-insensitive host-only comparison
+
 ## [0.4.0] - 2026-04-20
 
 ### Added

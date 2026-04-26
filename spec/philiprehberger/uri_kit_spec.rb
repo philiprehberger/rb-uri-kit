@@ -429,6 +429,102 @@ RSpec.describe Philiprehberger::UriKit do
       end
     end
 
+    describe '#same_origin?' do
+      it 'returns true for identical scheme, host, and port' do
+        a = described_class.new('https://example.com/page')
+        b = described_class.new('https://example.com/other')
+        expect(a.same_origin?(b)).to be true
+      end
+
+      it 'returns false for different scheme' do
+        a = described_class.new('https://example.com/page')
+        b = described_class.new('http://example.com/page')
+        expect(a.same_origin?(b)).to be false
+      end
+
+      it 'returns false for different host' do
+        a = described_class.new('https://example.com/page')
+        b = described_class.new('https://other.com/page')
+        expect(a.same_origin?(b)).to be false
+      end
+
+      it 'returns false for different port' do
+        a = described_class.new('https://example.com:8080/page')
+        b = described_class.new('https://example.com:9090/page')
+        expect(a.same_origin?(b)).to be false
+      end
+
+      it 'treats default http port as equal to no port' do
+        a = described_class.new('http://example.com/page')
+        b = described_class.new('http://example.com:80/page')
+        expect(a.same_origin?(b)).to be true
+      end
+
+      it 'treats default https port as equal to no port' do
+        a = described_class.new('https://example.com/page')
+        b = described_class.new('https://example.com:443/page')
+        expect(a.same_origin?(b)).to be true
+      end
+
+      it 'is case-insensitive on host' do
+        a = described_class.new('https://Example.COM/page')
+        b = described_class.new('https://example.com/page')
+        expect(a.same_origin?(b)).to be true
+      end
+
+      it 'accepts a string argument' do
+        a = described_class.new('https://example.com/page')
+        expect(a.same_origin?('https://example.com/other')).to be true
+      end
+
+      it 'returns false for non-Url, non-String arguments' do
+        a = described_class.new('https://example.com/page')
+        expect(a.same_origin?(42)).to be false
+      end
+    end
+
+    describe '#same_host?' do
+      it 'is case-insensitive' do
+        a = described_class.new('https://Example.COM/page')
+        b = described_class.new('https://example.com/page')
+        expect(a.same_host?(b)).to be true
+      end
+
+      it 'ignores scheme' do
+        a = described_class.new('https://example.com/page')
+        b = described_class.new('http://example.com/page')
+        expect(a.same_host?(b)).to be true
+      end
+
+      it 'ignores port' do
+        a = described_class.new('https://example.com:8080/page')
+        b = described_class.new('https://example.com:9090/page')
+        expect(a.same_host?(b)).to be true
+      end
+
+      it 'ignores path and query' do
+        a = described_class.new('https://example.com/one?a=1')
+        b = described_class.new('https://example.com/two?b=2')
+        expect(a.same_host?(b)).to be true
+      end
+
+      it 'returns false for different host' do
+        a = described_class.new('https://example.com/page')
+        b = described_class.new('https://other.com/page')
+        expect(a.same_host?(b)).to be false
+      end
+
+      it 'accepts a string argument' do
+        a = described_class.new('https://example.com/page')
+        expect(a.same_host?('http://example.com')).to be true
+      end
+
+      it 'returns false for non-Url, non-String arguments' do
+        a = described_class.new('https://example.com/page')
+        expect(a.same_host?(nil)).to be false
+      end
+    end
+
     describe '#to_s' do
       it 'returns the full URL' do
         url = described_class.new('https://example.com/path?q=1#frag')

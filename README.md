@@ -129,6 +129,17 @@ url = Philiprehberger::UriKit.join('https://example.com/base/', 'page.html')
 url.to_s  # => "https://example.com/base/page.html"
 ```
 
+### Origin and Host Comparison
+
+```ruby
+require "philiprehberger/uri_kit"
+
+a = Philiprehberger::UriKit.parse('https://example.com/page')
+b = Philiprehberger::UriKit.parse('https://example.com/other')
+a.same_origin?(b)            # => true
+a.same_host?('http://example.com')  # => true
+```
+
 ## API
 
 | Method | Description |
@@ -157,6 +168,8 @@ url.to_s  # => "https://example.com/base/page.html"
 | `Url#fragment` | Fragment identifier |
 | `Url#to_s` | Get the full URL string |
 | `Url#==` / `Url#eql?` | Value equality based on string representation |
+| `Url#same_origin?(other)` | True when scheme, host, and effective port match (RFC 6454) |
+| `Url#same_host?(other)` | True when only the host matches, case-insensitive |
 
 ## Development
 

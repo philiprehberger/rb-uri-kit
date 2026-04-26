@@ -206,6 +206,39 @@ module Philiprehberger
         to_s.hash
       end
 
+      # Same origin per RFC 6454: identical scheme, host (case-insensitive), and
+      # effective port. Default ports (80 for http, 443 for https) are treated as
+      # equal to no port.
+      #
+      # @param other [Url, String]
+      # @return [Boolean]
+      def same_origin?(other)
+        other = self.class.new(other) if other.is_a?(String)
+        return false unless other.is_a?(self.class)
+
+        scheme.to_s.downcase == other.scheme.to_s.downcase &&
+          host.to_s.downcase == other.host.to_s.downcase &&
+          effective_port == other.effective_port
+      end
+
+      # Same host (case-insensitive). Ignores scheme, port, path, and query.
+      #
+      # @param other [Url, String]
+      # @return [Boolean]
+      def same_host?(other)
+        other = self.class.new(other) if other.is_a?(String)
+        return false unless other.is_a?(self.class)
+
+        host.to_s.downcase == other.host.to_s.downcase
+      end
+
+      protected
+
+      def effective_port
+        default = { 'http' => 80, 'https' => 443, 'ws' => 80, 'wss' => 443 }
+        port || default[scheme.to_s.downcase]
+      end
+
       private
 
       def encode_params(hash)
